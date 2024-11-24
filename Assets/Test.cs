@@ -4,7 +4,21 @@ using UnityEngine.EventSystems;
 
 public class Test: MonoBehaviour
 {
-    public float maxMoveSpeed;
+    [Header("角色属性")]
+    [Tooltip("最大移动速度")]public float maxMoveSpeed;
+    [Tooltip("跳跃受力")]public float jumpForce;
+    [Tooltip("跳跃速度")]public float jumpSpeed;
+    [Tooltip("攀爬速度")]public float climbSpeed;
+    
+    [Header("状态")]
+    public bool isCanClimb;
+    public bool IsClimb => isCanClimb && Input.GetKey(KeyCode.LeftControl);
+    public bool JumpKeyDown => Input.GetKeyDown(KeyCode.Space) || jumpFrame > 0;
+    public bool IsOnGround => downBox.collider != null;
+    public bool isCanFall;
+    public bool isCanControl;
+    
+    [Header("...")]
     public Vector3 velocity;
     public float h;
     public float v;
@@ -13,48 +27,12 @@ public class Test: MonoBehaviour
     public float introDir;
     public int jumpFrame;
     public Vector2 moveSpeed;
-    public float jumpForce;
-    public float climbSpeed;
     public GameObject target1;
     public GameObject target2;
     public GameObject target3;
     public Vector2 dashDir;
     public float vertivDir;
-    public float jumpSpeed;
-    public bool isCanFall;
-    public bool isCanControl;
     public float sp = 120;
-    public bool IsClimb
-    {
-        get
-        {
-            return isCanClimb && Input.GetKey(KeyCode.LeftControl);
-        }
-    }
-
-    public bool JumpKeyDown
-    {
-        get
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                return true;
-            }
-            else if (jumpFrame > 0)
-            {
-                return true;
-            }
-            return false;
-        }
-    }
-    public bool IsOnGround
-    {
-        get
-        {
-            return downBox.collider != null ? true : false;
-        }
-    }
-    public bool isCanClimb;
     public int playerLayer;
     public RaycastHit2D downBox;
     public RaycastHit2D[] leftBox;
@@ -74,9 +52,11 @@ public class Test: MonoBehaviour
             return null;
         }
     }
+
+    #region 游戏更新
+    
     private void Start()
     {
-
         rb = GetComponent<Rigidbody2D>();
         playerLayer = LayerMask.GetMask("Player");
         playerLayer = ~playerLayer;
@@ -189,6 +169,7 @@ public class Test: MonoBehaviour
             }
         }
     }
+    
     private void FixedUpdate()
     {
         if(jumpFrame > 0)
@@ -260,6 +241,9 @@ public class Test: MonoBehaviour
         }
         rb.MovePosition(transform.position + velocity * Time.fixedDeltaTime);
     }
+    
+    #endregion
+    
     IEnumerator ClambAutoJump()
     {
         var posY = Mathf.Ceil(transform.position.y);
