@@ -150,10 +150,10 @@ public class InputManager: MonoBehaviour
     }
     private void KeyInit()
     {
-        jump = KeyCode.Space;
-        dash = KeyCode.LeftShift;
-        climb = KeyCode.LeftControl;
-        leftMoveKey = KeyCode.A;
-        rightMoveKey = KeyCode.D;
+        jump = KeyCode.C;
+        dash = KeyCode.X;
+        climb = KeyCode.Z;
+        leftMoveKey = KeyCode.LeftArrow;
+        rightMoveKey = KeyCode.RightArrow;
     }
 }
