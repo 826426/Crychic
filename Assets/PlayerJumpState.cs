@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Windows;
 
 public class PlayerJumpState : State
 {
@@ -13,20 +14,23 @@ public class PlayerJumpState : State
     public override void Enter()
     {
         base.Enter();
-        //player.isJumping = true;
         player.Jump();
     }
 
     public override void Exit()
     {
         base.Exit();
-        //player.isJumping = false;
+        player.isJumping = false;
     }
 
     public override void FixedUpdate()
     {
         base.FixedUpdate();
 
+        if (!player.isCanMove)
+        {
+            return;
+        }
         if (player.velocity.x > 0 && player.input.moveDir < 0 || (player.velocity.x < 0 && player.input.moveDir > 0) || (player.input.moveDir == 0
             || (player.IsOnGround && player.input.v < 0) || Mathf.Abs(player.velocity.x) > player.maxMoveSpeed))
         {
