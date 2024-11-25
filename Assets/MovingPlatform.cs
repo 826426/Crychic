@@ -4,10 +4,12 @@ using UnityEngine;
 public class MovingPlatform : MonoBehaviour
 {
     [Header("参数")]
-    [Tooltip("左端点")] 
-    public float leftX;
+    [Tooltip("左端点")]
+    public GameObject leftPoint;
+    private float leftX;
     [Tooltip("右端点")]
-    public float rightX;
+    public GameObject rightPoint;
+    private float rightX;
     [Tooltip("速度")] 
     public float moveSpeed = 2f;
     [Tooltip("是否停滞")] 
@@ -20,6 +22,9 @@ public class MovingPlatform : MonoBehaviour
     
     private void Start()
     {
+        leftX = leftPoint.transform.position.x;
+        rightX = rightPoint.transform.position.x;
+
         targetX = leftX;
     }
     
