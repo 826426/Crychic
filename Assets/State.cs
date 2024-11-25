@@ -22,7 +22,15 @@ public class State
     }
     public virtual void Update()
     {
-        if (!player.IsOnGround && !player.isJumping && !player.isClimbing)
+        if (!player.isCanController)
+        {
+            return;
+        }
+        if (player.input.DashKeyDown && player.dashCount > 0)
+        {
+            stateMachine.ChangeState(player.dashState);
+        }
+        if (!player.IsOnGround && !player.isJumping && !player.isClimbing && !player.isDashing)
         {
             stateMachine.ChangeState(player.airState);
         }
@@ -34,7 +42,7 @@ public class State
         {
             if((player.input.moveDir > 0 || player.input.moveDir < 0) && player.IsCanClimb && !player.isClimbing && !player.isJumping)
             {
-                if((player.FaceDir > 0 && player.leftBox.Length > 0) || (player.FaceDir < 0 && player.rightBox.Length > 0))
+                if((player.faceDir > 0 && player.leftBox.Length > 0) || (player.faceDir < 0 && player.rightBox.Length > 0))
                 {
                     stateMachine.ChangeState(player.airState);
                     return;
@@ -42,7 +50,7 @@ public class State
                 stateMachine.ChangeState(player.slideState);
             }
         }
-        if (player.input.ClimbKey && player.IsCanClimb && !player.isClimbing)
+        if (player.input.ClimbKey && player.IsCanClimb && !player.isClimbing && !player.isJumping)
         {
             stateMachine.ChangeState(player.climbState);
         }

@@ -23,6 +23,10 @@ public class PlayerAirState : State
         base.FixedUpdate();
         player.velocity.y -= 150f * Time.fixedDeltaTime;
         player.velocity.y = Mathf.Clamp(player.velocity.y, -25, player.velocity.y);
+        if (!player.isCanMove)
+        {
+            return;
+        }
         if (player.velocity.x > 0 && player.input.moveDir < 0 || (player.velocity.x < 0 && player.input.moveDir > 0) || (player.input.moveDir == 0
     || (player.IsOnGround && player.input.v < 0) || Mathf.Abs(player.velocity.x) > player.maxMoveSpeed))
         {
@@ -61,6 +65,12 @@ public class PlayerAirState : State
         if (player.IsOnGround)
         {
             stateMachine.ChangeState(player.idleState);
+        }
+        if (player.input.JumpKeyDown && !player.input.ClimbKey && player.IsCanClimb)
+        {
+            player.velocity.y = 0;
+            player.isJumping = false;
+            player.Jump(new Vector2(4 * -player.faceDir, 0), new Vector2(12, 0));
         }
     }
 }
