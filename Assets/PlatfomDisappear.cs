@@ -1,17 +1,24 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlatformDisappear : MonoBehaviour
 {
     [Header("延迟")]
+    [Label("消失延迟")]
     public float disappearDelay = 0.5f;
+    [Label("恢复延迟")]
     public float recoveryDelay = 0.5f;
+    
     [Header("透明度")]
+    [Label("消失透明度")]
     public float disappearAlpha = 0.2f;
+    [Label("恢复透明度")]
     public float recoveryAlpha = 1f;
+    
     [Header("抖动参数")]
+    [Label("晃动幅度")]
     public float shakeAmount = 0.1f;
+    [Label("晃动频率")]
     public float shakeFrequency = 10f;//用正弦模拟抖动先
     
     private SpriteRenderer platformSpriteRenderer;

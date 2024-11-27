@@ -4,17 +4,17 @@ using UnityEngine;
 public class MovingPlatform : MonoBehaviour
 {
     [Header("参数")]
-    [Tooltip("左端点")]
+    [Label("左端点")]
     public GameObject leftPoint;
     private float leftX;
-    [Tooltip("右端点")]
+    [Label("右端点")]
     public GameObject rightPoint;
     private float rightX;
-    [Tooltip("速度")] 
+    [Label("速度")] 
     public float moveSpeed = 2f;
-    [Tooltip("是否停滞")] 
+    [Label("是否停滞")] 
     public bool canWait;
-    [Tooltip("停滞时间")] 
+    [Label("停滞时间")] 
     public float waitTime = 1f;
 
     private float targetX;
