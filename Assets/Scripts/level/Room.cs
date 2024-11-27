@@ -19,7 +19,9 @@ public class Room : MonoBehaviour
         confiner.gameObject.SetActive(false);
 
         OnTriggerEnterEvent.AddListener(() => { confiner.gameObject.SetActive(true); });
-        OnTriggerEnterEvent.AddListener(() => { checkpoint.gameObject.SetActive(true); });
+        OnTriggerEnterEvent.AddListener(() => { checkpoint.gameObject.SetActive(true); 
+            GameManager.instance.currentCheckPoint = checkpoint; });
+
         OnTriggerExitEvent.AddListener(() => { confiner.gameObject.SetActive(false); });
         OnTriggerExitEvent.AddListener(() => { checkpoint.gameObject.SetActive(false); });
     }

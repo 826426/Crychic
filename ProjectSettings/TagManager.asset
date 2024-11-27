@@ -49,6 +49,9 @@ TagManager:
   - name: levelBlack
     uniqueID: 3534028871
     locked: 0
+  - name: DeadItem
+    uniqueID: 538891721
+    locked: 0
   - name: Item
     uniqueID: 1360385755
     locked: 0
