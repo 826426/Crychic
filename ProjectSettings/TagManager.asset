@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - CameraBoundary
+  - EndPoint
   layers:
   - Default
   - TransparentFX
@@ -42,8 +43,11 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: level
+  - name: levelBG
     uniqueID: 1838740073
+    locked: 0
+  - name: levelBlack
+    uniqueID: 3534028871
     locked: 0
   - name: Item
     uniqueID: 1360385755

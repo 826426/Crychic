@@ -37,8 +37,8 @@ public class Level : MonoBehaviour
     IEnumerator StopMove()
     {
         Time.timeScale = 0;
-        yield return null;
-        //yield return new WaitForSecondsRealtime(blendTime);
+        //yield return null;
+        yield return new WaitForSecondsRealtime(blendTime);
         Time.timeScale = 1;
     }
 }
