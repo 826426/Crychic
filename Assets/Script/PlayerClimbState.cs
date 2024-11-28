@@ -27,32 +27,41 @@ public class PlayerClimbState : State
     public override void Update()
     {
         base.Update();
+        if(player.MP <= 0)
+        {
+            stateMachine.ChangeState(player.slideState);
+            return;
+        }
         if (Input.GetKeyDown(player.input.jump))
         {
             if(player.input.moveDir == 0 || player.CheckIsSlide())
             {
                 player.velocity.y = 0;
+                player.MP -= 30;
                 player.Jump();
             }
             else if(!player.CheckIsSlide())
             {
                 player.velocity.y = 0;
-                player.Jump(new Vector2(8 * player.faceDir, 0), new Vector2(32, 0));
+                player.Jump(new Vector2(8 * -player.GetWallDir(), 0), new Vector2(32, 0));
             }
             return;
         }
         if(player.HorizontalBox != null)
         {
-            if (player.input.v > 0 && player.transform.position.y - player.HorizontalBox[0].point.y > 0.4f)
+            if(player.upBox.Length <= 0)
             {
-                player.AuotoJumpClimb();
-                return;
+                if ((player.input.v > 0 && player.transform.position.y - player.HorizontalBox[0].point.y > 1f))
+                {
+                    player.AuotoJumpClimb();
+                    return;
+                }
             }
-            if(player.input.v <= 0 && player.transform.position.y - player.HorizontalBox[0].point.y > 0.3f)
+            if(player.input.v <= 0 && player.transform.position.y - player.HorizontalBox[0].point.y > 0.9f)
             {
                 player.velocity.y = -player.climbSpeed;
             }
-            else if(player.transform.position.y - player.HorizontalBox[0].point.y <= 0.3f)
+            else if(player.transform.position.y - player.HorizontalBox[0].point.y <= 0.9f)
             {
                 player.velocity.y = player.input.v * player.climbSpeed;
             }

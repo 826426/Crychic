@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.UIElements;
+
 public enum CurState
 {
     Normal,
@@ -11,25 +13,34 @@ public enum CurState
 }
 public class Player : MonoBehaviour
 {
+    
+    private ScriptableObject playerParam;
     public CurState curState;
     public GameObject target1;
     public GameObject target2;
     public GameObject target3;
+    public GameObject target4;
     public Vector2 box1Size;
     public Vector2 box2Size;
     public Vector2 box3Size;
+    public Vector2 box4Size;
+    public float MP = 120f;
+    [HideInInspector]
     public Vector2 dashDir;
+    [HideInInspector]
     public float dashCount;
+    [HideInInspector]
     public int faceDir;//角色面朝方向
     public float jumpMax;//最大跳跃高度
     public float jumpMin;//最小跳跃高度
-    public float climbSpeed;//下滑速度同时也是攀爬速度
     public float jumpSpeed;
+    public float climbSpeed;//下滑速度同时也是攀爬速度
+    [HideInInspector]
     public bool isCanController = true;
-    public bool isJumping;
-    public bool isClimbing;
+    [HideInInspector]
     public bool isCanMove;
-    public bool isDashing;
+    private bool fixHorizon;
+    private string shadowPath;
     public bool IsOnGround
     {
         get
@@ -50,20 +61,36 @@ public class Player : MonoBehaviour
     }
     public Vector3 velocity;//当前移动速度
     public float maxMoveSpeed;
+    [HideInInspector]
     public InputManager input;
+    [HideInInspector]
     public StateMachine stateMachine;
+    [HideInInspector]
     public PlayerNormalState normalState;
+    [HideInInspector]
     public PlayerJumpState jumpState;
+    [HideInInspector]
     public PlayerClimbState climbState;
+    [HideInInspector]
     public PlayerDashState dashState;
+    [HideInInspector]
     public PlayerFallState fallState;
+    [HideInInspector]
     public PlayerSlideState slideState;
+    [HideInInspector]
     public Animator anim;
+    [HideInInspector]
     public Rigidbody2D rb;
+    [HideInInspector]
     public float startJumpPos;
     private int playerLayer;
+    [HideInInspector]
     public RaycastHit2D downBox;
+    [HideInInspector]
+    public RaycastHit2D[] upBox;
+    [HideInInspector]
     public RaycastHit2D[] leftBox;
+    [HideInInspector]
     public RaycastHit2D[] rightBox;
     public RaycastHit2D[] HorizontalBox
     {
@@ -83,6 +110,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         faceDir = -1;
+        shadowPath = "Prefab/Shadow";
         stateMachine = new StateMachine();
         normalState = new PlayerNormalState(this, stateMachine, "Normal");
         jumpState = new PlayerJumpState(this, stateMachine, "Jump");
@@ -118,12 +146,21 @@ public class Player : MonoBehaviour
     private void Update()
     {
         stateMachine.currentState.Update();
-        downBox = Physics2D.BoxCast(transform.position, new Vector2(0.75f, 1.15f), 0, Vector2.down, 0.85f, playerLayer);
-        rightBox = Physics2D.BoxCastAll(transform.position, new Vector2(0.6f, 2.8f), 0, Vector2.right, 0.3f, playerLayer);
-        leftBox = Physics2D.BoxCastAll(transform.position, new Vector2(0.4f, 2.8f), 0, Vector2.left, 0.3f, playerLayer);
+        upBox = Physics2D.BoxCastAll(transform.position, new Vector2(1f, 1f), 0, Vector2.up, 0.6f, playerLayer);
+        downBox = Physics2D.BoxCast(transform.position, new Vector2(1f, 0.7f), 0, Vector2.down, 1.15f, playerLayer);
+        rightBox = Physics2D.BoxCastAll(transform.position, new Vector2(0.5f, 2f), 0, Vector2.right, 0.3f, playerLayer);
+        leftBox = Physics2D.BoxCastAll(transform.position, new Vector2(0.5f, 2f), 0, Vector2.left, 0.3f, playerLayer);
         if (HorizontalBox != null && HorizontalBox.Length > 0)
         {
             Debug.DrawLine(transform.position, HorizontalBox[0].point, Color.red);
+        }
+        if(velocity.x > maxMoveSpeed)
+        {
+            CheckHorMove();
+        }
+        if(velocity.y > 6)
+        {
+            CheckUpMove();
         }
         UpdateDashCount();
         UpdateFaceDir();
@@ -137,18 +174,23 @@ public class Player : MonoBehaviour
     {
         if (IsOnGround && curState != CurState.Dash)
         {
-            dashCount = 1;
+            ResetDashCount();
         }
+    }
+
+    private void ResetDashCount()
+    {
+        dashCount = 1;
     }
 
     private void UpdateFaceDir()
     {
-        if (input.moveDir > 0 && faceDir < 0)
+        if (velocity.x > 0 && faceDir < 0)
         {
             transform.Rotate(0, 180, 0);
             faceDir = 1;
         }
-        else if (input.moveDir < 0 && faceDir > 0)
+        else if (velocity.x < 0 && faceDir > 0)
         {
             transform.Rotate(0, 180, 0);
             faceDir = -1;
@@ -159,15 +201,21 @@ public class Player : MonoBehaviour
     {
         stateMachine.currentState.FixedUpdate();
         rb.MovePosition(transform.position + velocity * Time.fixedDeltaTime);
+        if (curState == CurState.Climb && curState != CurState.Jump)
+        {
+            MP -= 0.25f;
+        }
     }
     public void Jump()
     {
+        ParticleManager.instance.DustPlay(this.transform);
         stateMachine.ChangeState(jumpState);
         startJumpPos = transform.position.y;
         StartCoroutine(StartJump(Vector2.zero, Vector2.zero));
     }
     public void Jump(Vector2 vel, Vector2 maxVel)
     {
+        ParticleManager.instance.DustPlay(this.transform);
         stateMachine.ChangeState(jumpState);
         startJumpPos = transform.position.y;
         StartCoroutine(StartJump(vel, maxVel));
@@ -189,6 +237,12 @@ public class Player : MonoBehaviour
                     velocity.x = maxVel.x * faceDir;
                 }
             }
+            if (!CheckUpMove())
+            {
+                velocity.y = 0;
+                isCanMove = true;
+                yield break;
+            }
             dis = transform.position.y - startJumpPos;
             if (vel.y <= 0)
             {
@@ -200,6 +254,11 @@ public class Player : MonoBehaviour
         isCanMove = true;
         while (curState == CurState.Jump && dis < curJumpMax && input.JumpKey)
         {
+            if (!CheckUpMove())
+            {
+                velocity.y = 0;
+                yield break;
+            }
             if(curState == CurState.Jump && Input.GetKeyDown(input.jump) && IsCanClimb && curState != CurState.Climb)
             {
                 SetVelZero();
@@ -212,6 +271,10 @@ public class Player : MonoBehaviour
         }
         while (curState == CurState.Jump && velocity.y > 0)
         {
+            if(!CheckUpMove())
+            {
+                break;
+            }
             if (curState == CurState.Jump && Input.GetKeyDown(input.jump) && IsCanClimb && curState != CurState.Climb)
             {
                 SetVelZero();
@@ -237,6 +300,8 @@ public class Player : MonoBehaviour
         velocity = Vector3.zero;
         dashCount--;
         StopAllCoroutines();
+        ParticleManager.instance.DashPlay(this.transform);
+        ParticleManager.instance.DustPlay(this.transform);
         StartCoroutine("StartDash");
     }
     public void SetVelZero()
@@ -254,6 +319,54 @@ public class Player : MonoBehaviour
     public bool CheckCanMove()
     {
         return (isCanMove && curState != CurState.Dash && curState != CurState.Climb && curState != CurState.Slide && isCanController);
+    }
+    public void CheckHorMove()
+    {
+        if (fixHorizon || HorizontalBox == null)
+        {
+            return;
+        }
+        if(HorizontalBox.Length == 1)
+        {
+            var pointPos = HorizontalBox[0].point.y - transform.position.y;
+            if(pointPos > 0.34f)
+            {
+                var offsetPos = Mathf.Ceil(transform.position.y);
+                transform.position = new Vector3(transform.position.x, offsetPos - 0.22f, 0);
+            }
+            else if(pointPos < -0.42f)
+            {
+                var offsetPos = Mathf.Ceil(transform.position.y);
+                transform.position = new Vector3(transform.position.x, offsetPos + 0.035f, 0);
+            }
+            fixHorizon = true;
+        }
+    }
+    public bool CheckUpMove()
+    {
+        if(upBox.Length == 1)
+        {
+            var pointDis = upBox[0].point.x - transform.position.x;
+            if(pointDis > 0.34f)
+            {
+                var offsetPos = Mathf.Floor(transform.position.x);
+                transform.position = new Vector3(offsetPos + 0.48f, transform.position.y, 0);
+                return true;
+            }
+            else if(pointDis < 0.34f)
+            {
+                var offsetPos = Mathf.Floor(transform.position.x);
+                transform.position = new Vector3(offsetPos + 0.52f, transform.position.y, 0);
+                return true;
+            }
+            else
+            {
+                velocity.y = 0;
+                stateMachine.ChangeState(fallState);
+                return false;
+            }
+        }
+        return true;
     }
     IEnumerator StartDash()
     {
@@ -282,12 +395,25 @@ public class Player : MonoBehaviour
         }
         int i = 0;
         isCanController = false;
+        fixHorizon = false;
         while (i < 9)
         {
             velocity = dashDir * 30f;
+            if(i == 2 || i == 7)
+            {
+                GameObject shadow;
+                shadow = Instantiate(Resources.Load<GameObject>(shadowPath));
+                if(velocity.x > 0)
+                {
+                    shadow.GetComponent<Transform>().Rotate(0, 180, 0);
+                }
+                shadow.transform.position = this.transform.position;
+            }
             i++;
+            CheckHorMove();
             yield return new WaitForFixedUpdate();
         }
+        GameObject.Find("DashFX(Clone)").GetComponent<ParticleSystem>().Stop();
         isCanController = true;
         if (IsOnGround)
         {
@@ -318,5 +444,6 @@ public class Player : MonoBehaviour
         Gizmos.DrawWireCube(target1.transform.position, box1Size);
         Gizmos.DrawWireCube(target2.transform.position, box2Size);
         Gizmos.DrawWireCube(target3.transform.position, box3Size);
+        Gizmos.DrawWireCube(target4.transform.position, box4Size);
     }
 }

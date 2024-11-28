@@ -307,6 +307,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5522fd88d8185014ead8f4b9e7be7503, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerParam: {fileID: 11400000, guid: d8ab3758ff8e6e14f80e87c4204b58e0, type: 2}
   curState: 0
   target1: {fileID: 1949317463}
   target2: {fileID: 1436577850}
@@ -319,13 +320,10 @@ MonoBehaviour:
   faceDir: 0
   jumpMax: 1
   jumpMin: 0.5
-  climbSpeed: 2
   jumpSpeed: 15
+  climbSpeed: 2
   isCanController: 1
-  isJumping: 0
-  isClimbing: 0
   isCanMove: 0
-  isDashing: 0
   velocity: {x: 0, y: 0, z: 0}
   maxMoveSpeed: 12
   input: {fileID: 0}
