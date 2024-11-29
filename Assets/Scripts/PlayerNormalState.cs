@@ -11,6 +11,7 @@ public class PlayerNormalState : State
     public override void Enter()
     {
         base.Enter();
+        player.MP = 120f;
         player.curState = CurState.Normal;
         player.velocity.y = 0;
     }
