@@ -32,6 +32,16 @@ public class PlayerSlideState : State
             player.Jump(new Vector2(6 * -player.GetWallDir(), 0), new Vector2(24, 0));
             return;
         }
+        if(player.input.ClimbKey && player.MP <= 0)
+        {
+            if (player.IsOnGround)
+            {
+                stateMachine.ChangeState(player.normalState);
+                return;
+            }
+            player.velocity.y = -player.climbSpeed;
+            return;
+        }
         if(!player.CheckIsSlide())
         {
             stateMachine.ChangeState(player.fallState);

@@ -38,7 +38,7 @@ public class State
         {
             stateMachine.ChangeState(player.slideState);
         }
-        if(player.input.ClimbKey && player.IsCanClimb && player.curState != CurState.Jump && player.curState != CurState.Dash && player.curState != CurState.Climb)
+        if(player.input.ClimbKey && player.IsCanClimb && player.curState != CurState.Jump && player.curState != CurState.Dash && player.curState != CurState.Climb && player.MP > 0)
         {
             stateMachine.ChangeState(player.climbState);
         }

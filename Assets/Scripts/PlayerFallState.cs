@@ -17,6 +17,7 @@ public class PlayerFallState : State
     public override void Exit()
     {
         base.Exit();
+        ParticleManager.instance.DustPlay(player.transform);
     }
 
     public override void FixedUpdate()
