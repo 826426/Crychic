@@ -35,6 +35,7 @@ public class Player : MonoBehaviour
     public float jumpMin;//最小跳跃高度
     public float jumpSpeed;
     public float climbSpeed;//下滑速度同时也是攀爬速度
+    public float dashFactor;
     [HideInInspector]
     public bool isCanController = true;
     [HideInInspector]
@@ -398,7 +399,7 @@ public class Player : MonoBehaviour
         fixHorizon = false;
         while (i < 9)
         {
-            velocity = dashDir * 30f;
+            velocity = dashDir * dashFactor;
             if(i == 2 || i == 7)
             {
                 GameObject shadow;
