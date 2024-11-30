@@ -39,7 +39,9 @@ public class JumpingPlatform : MonoBehaviour
 
         if (player != null)
         {
+            Debug.Log("player jump");
             player.Jump(vel,new Vector2(maxVelX,0));
+            isPlayerOnPlatform = false;
         }
     }
 }

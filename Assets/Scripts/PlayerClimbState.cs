@@ -66,7 +66,7 @@ public class PlayerClimbState : State
                 player.velocity.y = player.input.v * player.climbSpeed;
             }
         }
-        if (player.input.ClimbKeyUp)
+        if (player.input.ClimbKeyUp || player.HorizontalBox == null)
         {
             if (player.IsOnGround)
             {
