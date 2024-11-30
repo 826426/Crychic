@@ -5,9 +5,12 @@ public class FallingPlatform : MonoBehaviour
 {
     private Player player;
     private bool isNeedCheck = false;
-    private bool isNeedContinueFall= false;
     [Label("下降速度")]
     public float fallSpeed = 1f;
+    [Label("射线长度")]
+    public float rayLength = 1f;
+
+    private RaycastHit2D hit;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -16,10 +19,6 @@ public class FallingPlatform : MonoBehaviour
             player = other.GetComponent<Player>();
             isNeedCheck = true;
             StartCoroutine(CheckPlayerIsOnPlatform());
-        }
-        else
-        {
-            isNeedContinueFall = false;
         }
     }
 
@@ -37,7 +36,6 @@ public class FallingPlatform : MonoBehaviour
         {
             if (player.downBox.collider && player.downBox.collider.CompareTag("FallPlatform"))
             {
-                isNeedContinueFall = true;
                 StartCoroutine(Fall());
                 isNeedCheck = false;
                 yield break;
@@ -48,9 +46,15 @@ public class FallingPlatform : MonoBehaviour
 
     private IEnumerator Fall()
     {
-        while (isNeedContinueFall)
+        while (true)
         {
             this.transform.position = new Vector2(this.transform.position.x, this.transform.position.y - Time.deltaTime * fallSpeed);
+            
+            hit = Physics2D.Raycast(transform.position, Vector2.down, rayLength,~LayerMask.GetMask("Platform"));
+            if (hit.collider != null)
+            {
+                yield break;
+            }
 
             yield return null;
         }
