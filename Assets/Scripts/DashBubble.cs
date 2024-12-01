@@ -22,6 +22,8 @@ public class DashBubble : MonoBehaviour
         {
             player = other.GetComponent<Player>();
             
+            player.StopAllCoroutines();
+            
             spriteRenderer.color = new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, 0);
             boxCollider2D.enabled = false;
             
