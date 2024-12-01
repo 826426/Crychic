@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerReady2DashState : State
@@ -26,6 +27,7 @@ public class PlayerReady2DashState : State
         {
             stateMachine.ChangeState(player.dashState);
         }
+
 
         //player用的是rotate转向，导致如果我开始和结束朝向不一样就会反
         // if (Input.GetKeyDown(KeyCode.LeftArrow))
