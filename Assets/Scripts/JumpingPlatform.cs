@@ -2,10 +2,9 @@ using UnityEngine;
 
 public class JumpingPlatform : MonoBehaviour
 {
-    [Label("速度加成")] 
-    public Vector2 vel;
-    [Label("最大横向速度")]
-    public float maxVelX;
+    [Label("跳跃高度")] 
+    public float high;
+
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -15,8 +14,10 @@ public class JumpingPlatform : MonoBehaviour
             if (playerRigidbody != null)
             {
                 var player = FindObjectOfType<Player>();
-                player.Jump(vel, new Vector2(maxVelX, 0));
-                //player.Jump();
+                float temp = player.jumpSpeed;
+                player.jumpSpeed = high;
+                player.Jump();
+                player.jumpSpeed = temp;
             }
         }
     }
