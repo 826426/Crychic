@@ -9,6 +9,7 @@ public enum CurState
     Jump,
     Climb,
     Dash,
+    Ready2Dash,
     Slide
 }
 public class Player : MonoBehaviour
@@ -74,6 +75,8 @@ public class Player : MonoBehaviour
     public PlayerClimbState climbState;
     [HideInInspector]
     public PlayerDashState dashState;
+    [HideInInspector] 
+    public PlayerReady2DashState ready2DashState;
     [HideInInspector]
     public PlayerFallState fallState;
     [HideInInspector]
@@ -119,6 +122,7 @@ public class Player : MonoBehaviour
         dashState = new PlayerDashState(this, stateMachine, "Dash");
         fallState = new PlayerFallState(this, stateMachine, "Jump");
         slideState = new PlayerSlideState(this, stateMachine, "Slide");
+        ready2DashState = new PlayerReady2DashState(this, stateMachine, "Normal");
     }
     private void Start()
     {
