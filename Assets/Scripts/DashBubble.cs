@@ -24,7 +24,7 @@ public class DashBubble : MonoBehaviour
             
             player.StopAllCoroutines();
             
-            spriteRenderer.color = new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, 0);
+            
             boxCollider2D.enabled = false;
             
             player.ready2DashState.playerStayPos = this.transform.position;
@@ -39,6 +39,7 @@ public class DashBubble : MonoBehaviour
         {
             yield return null;
         }
+        spriteRenderer.color = new Color(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, 0);
 
         float time2Recover = recoverSeconds;
         while (time2Recover >= 0)

@@ -30,13 +30,14 @@ public class GameManager : MonoBehaviour
     public void PlayerBeAttacked()
     {
         Debug.Log("Player is dead");
-        PlayDeadAnimation();
+        //player.GetComponent<Player>().PlayDeadAnimation();
         ResetPlayer();
     }
 
     public void ResetPlayer()
     {
         StartCoroutine(IE_ResetPlayer(deadDuringTime));
+        player.GetComponent<Player>().StopAllCoroutines();
     }
 
     IEnumerator IE_ResetPlayer(float second)
@@ -45,11 +46,6 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(second);
         Time.timeScale = 1;
         player.transform.position = currentCheckPoint.transform.position;
-    }
-
-    public void PlayDeadAnimation()
-    {
-
     }
 
     public void Finish()

@@ -14,6 +14,7 @@ public class JumpingPlatform : MonoBehaviour
             if (playerRigidbody != null)
             {
                 var player = FindObjectOfType<Player>();
+                player.dashCount++;
                 float temp = player.jumpSpeed;
                 player.jumpSpeed = high;
                 player.Jump();

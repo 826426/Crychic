@@ -82,6 +82,8 @@ public class Player : MonoBehaviour
     [HideInInspector]
     public PlayerSlideState slideState;
     [HideInInspector]
+    public PlayerDeadState deadState;
+    [HideInInspector]
     public Animator anim;
     [HideInInspector]
     public Rigidbody2D rb;
@@ -123,6 +125,7 @@ public class Player : MonoBehaviour
         fallState = new PlayerFallState(this, stateMachine, "Jump");
         slideState = new PlayerSlideState(this, stateMachine, "Slide");
         ready2DashState = new PlayerReady2DashState(this, stateMachine, "Normal");
+        //deadState = new DeadState(this, stateMachine, "Dead");
     }
     private void Start()
     {
