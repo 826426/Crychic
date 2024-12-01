@@ -9,6 +9,7 @@ public class PlayerDashState : State
     public override void Enter()
     {
         base.Enter();
+        player.dashAudio.Play();
         player.curState = CurState.Dash;
         player.Dash();
     }

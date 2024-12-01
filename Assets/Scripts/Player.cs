@@ -43,6 +43,18 @@ public class Player : MonoBehaviour
     public bool isCanMove;
     private bool fixHorizon;
     private string shadowPath;
+
+    public AudioSource dashAudio;
+    public AudioSource jumpAudio;
+    public AudioSource fallAudio;
+
+    public void AudioInit()
+    {
+        dashAudio.Stop();
+        jumpAudio.Stop();
+        fallAudio.Stop();
+    }
+
     public bool IsOnGround
     {
         get
@@ -130,6 +142,20 @@ public class Player : MonoBehaviour
     private void Start()
     {
         Init();
+    }
+
+    public void InitState()
+    {
+        if (!IsOnGround)
+        {
+            stateMachine.InitializeState(fallState);
+        }
+        else
+        {
+            stateMachine.InitializeState(normalState);
+        }
+        SetVelZero();
+        isCanMove = true;
     }
 
     private void Init()
@@ -230,6 +256,7 @@ public class Player : MonoBehaviour
     }
     IEnumerator StartJump(Vector2 vel, Vector2 maxVel)
     {
+        jumpAudio.Play();
         float dis = 0;
         float curJumpMax = jumpMax * (vel.y + jumpSpeed) / jumpSpeed;
         float curJumpMin = jumpMin * (vel.y + jumpSpeed) / jumpSpeed;
@@ -378,6 +405,7 @@ public class Player : MonoBehaviour
     }
     IEnumerator StartDash()
     {
+        dashAudio.Play();
         float verticalDir;
         float horizontalDir;
         if (input.v < 0 && IsOnGround)

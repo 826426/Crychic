@@ -38,6 +38,8 @@ public class GameManager : MonoBehaviour
     {
         StartCoroutine(IE_ResetPlayer(deadDuringTime));
         player.GetComponent<Player>().StopAllCoroutines();
+        player.GetComponent<Player>().SetVelZero();
+        player.GetComponent<Player>().InitState();
     }
 
     IEnumerator IE_ResetPlayer(float second)

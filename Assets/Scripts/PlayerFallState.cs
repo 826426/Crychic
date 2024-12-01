@@ -11,6 +11,7 @@ public class PlayerFallState : State
     public override void Enter()
     {
         base.Enter();
+        player.fallAudio.Play();
         player.curState = CurState.Fall;
     }
 

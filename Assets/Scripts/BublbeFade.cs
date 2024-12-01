@@ -7,10 +7,16 @@ public class BubbleFade : MonoBehaviour
     private SpriteRenderer spriteRenderer; // 气泡的 SpriteRenderer
     private float fadeSpeed = 0.3f;         // 透明度变化速度
     private bool isFadingIn = true;      // 是否正在变亮
+    private float randomInitNumber;
 
     private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        randomInitNumber = UnityEngine.Random.Range(0, 255);
+        Debug.Log(randomInitNumber);
+        var color = spriteRenderer.color;
+        color.a = (float)randomInitNumber/255;
+        spriteRenderer.color = color;
     }
 
     void Update()

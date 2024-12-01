@@ -24,7 +24,8 @@ public class MovingPlatform : MonoBehaviour
     {
         leftX = leftPoint.transform.position.x;
         rightX = rightPoint.transform.position.x;
-
+        leftPoint.GetComponent<SpriteRenderer>().enabled = false;
+        rightPoint.GetComponent<SpriteRenderer>().enabled = false;
         targetX = leftX;
     }
     

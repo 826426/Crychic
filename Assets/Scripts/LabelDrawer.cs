@@ -1,4 +1,4 @@
-using UnityEditor;
+/*using UnityEditor;
 using UnityEngine;
 
 [CustomPropertyDrawer(typeof(LabelAttribute))]
@@ -12,3 +12,4 @@ public class LabelDrawer : PropertyDrawer
         EditorGUI.PropertyField(position, property, new GUIContent(displayName), true);
     }
 }
+*/
